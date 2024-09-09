@@ -6,25 +6,22 @@ export default function Pagina(props) {
         <>
             <Navbar bg="dark" data-bs-theme="dark">
                 <Container>
-                    <Navbar.Brand href="/">Home</Navbar.Brand>
+                    <Navbar.Brand href="/filmes">Filmes Revisão</Navbar.Brand>
                     <Nav className="me-auto">
-                        <Nav.Link href="/">Filmes Revisão</Nav.Link>
+                        <Nav.Link href="/filmes">Filmes Revisão</Nav.Link>
                         <Nav.Link href="/filmes">Filmes</Nav.Link>
                         <Nav.Link href="/series">Series</Nav.Link>
                         <Nav.Link href="/atores">Atores</Nav.Link>
+                        <NavDropdown title="Séries" id="basic-nav-dropdown"> 
+                            <NavDropdown.Item href="/series">
+                                Populares
+                            </NavDropdown.Item>
+                        </NavDropdown>
                         <NavDropdown title="Filmes" id="basic-nav-dropdown">
-                            <NavDropdown.Item href="./">
-                                Principal
+                            <NavDropdown.Item href="./filmes">
+                                Em cartaz
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="./disney/cards">Cards</NavDropdown.Item>
-
-                            <NavDropdown.Item href="./disney/carrossel">
-                                Carrossel
-                            </NavDropdown.Item>
-
-                            <NavDropdown.Item href="./disney/tabela">
-                                Tabela
-                            </NavDropdown.Item>
+                            
                             <NavDropdown.Divider />
 
                         </NavDropdown>
@@ -32,7 +29,7 @@ export default function Pagina(props) {
                 </Container>
             </Navbar>
 
-            <div className="bg-secondary text-white text-center p-3">
+            <div className="bg-white text-black text-center p-3">
                 <h1>{props.titulo}</h1>
             </div>
             <Container>
