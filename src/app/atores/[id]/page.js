@@ -2,70 +2,75 @@
 
 import Pagina from "@/app/components/Pagina";
 import apiMovie from "@/services/apiMovie";
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Col, Row, Button } from "react-bootstrap";
-import Link from 'next/link'; // Importar Link do Next.js
-import { useRouter } from 'next/navigation'; // Importar useRouter
+import { Col, Row } from "react-bootstrap";
 
-export default function ActorPage({ params }) {
-    const [ator, setAtor] = useState(null);
-    const [filmes, setFilmes] = useState([]);
-    const router = useRouter(); // Inicializar useRouter
+
+export default function Page({ params }) {
+    const [ator, setAtor] = useState({})
+    const [filmes, setFilmes] = useState([])
+    const [series, setSeries] = useState([])
 
     useEffect(() => {
-        const fetchDetails = async () => {
-            try {
-                // Obtém detalhes do ator
-                const resultado = await apiMovie.get(`person/${params.id}`);
-                setAtor(resultado.data);
+        apiMovie.get(`person/${params.id}`).then(resultado => {
+            setAtor(resultado.data)
+        })
+        apiMovie.get(`person/${params.id}/movie_credits`).then(resultado => {
+            setFilmes(resultado.data.cast);
+        })
+        apiMovie.get(`person/${params.id}/tv_credits`).then(resultado => {
+            setSeries(resultado.data.cast);
+        })
 
-                // Obtém filmes em que o ator participou
-                const filmesResultado = await apiMovie.get(`person/${params.id}/movie_credits`);
-                setFilmes(filmesResultado.data.cast);
-            } catch (error) {
-                console.error('Erro ao buscar os detalhes do ator:', error);
-            }
-        };
 
-        fetchDetails();
-    }, [params.id]);
-
-    if (!ator) {
-        return <div>Carregando...</div>;
-    }
+    }, [])
 
     return (
-        <Pagina titulo="Detalhes do Ator">
-            <Row className="mt-4">
-                <Col md={4}>
-                    <img src={`https://image.tmdb.org/t/p/w500/${ator.profile_path}`} alt={ator.name} className="img-fluid" />
-                </Col>
-                <Col>
-                    <p><b>Nome: </b>{ator.name}</p>
-                    <p><b>Data de Nascimento: </b>{ator.birthday}</p>
-                    <p><b>Local de Nascimento: </b>{ator.place_of_birth}</p>
-                    <p><b>Popularidade: </b>{ator.popularity}</p>
-                    <p><b>Biografia: </b>{ator.biography}</p>
-
-                    <Button variant="primary" onClick={() => router.back()}>Voltar</Button>
-                </Col>
-            </Row>
-
-            <h2>Filmes</h2>
-            <Row>
-                {filmes.map(filme => (
-                    <Col md={2} key={filme.id} className="my-2">
-                        <Link href={`/filmes/${filme.id}`} passHref>
-                            <img
-                                src={filme.poster_path ? `https://image.tmdb.org/t/p/w200/${filme.poster_path}` : '/placeholder.png'}
-                                alt={filme.title}
-                                className="img-fluid"
-                            />
-                        </Link>
-                        <p>{filme.title}</p>
+        <Pagina titulo={ator.name}>
+            {
+                ator.id &&
+                <Row className="mt-4">
+                    <Col sm={4}>
+                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + ator.profile_path} />
                     </Col>
-                ))}
-            </Row>
+
+                    <Col sm={8}>
+
+                        <p><b>Título Original: </b>{ator.birthday}</p>
+                        <p><b>Popularidade: </b>{ator.popularity}</p>
+                        <p><b>Data de Nascimento: </b>{ator.birthday}</p>
+                        <p><b>Local de Nascimento: </b>{ator.place_of_birth}</p>
+                        <p><b>Biografia: </b>{ator.biography}</p>
+                    </Col>
+                    <Col sm={12}>
+                        <h1>Filmes: </h1>
+                        <Row>
+                            {filmes.map(filme => (
+                                <Col key={filme.id} title={filme.title} className="mb-3" sm={2}>
+                                    <Link href={`/filmes/${filme.id}`}>
+                                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + filme.poster_path} />
+                                    </Link>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+
+                    <Col sm={12}>
+                        <h1>Series: </h1>
+                        <Row>
+                            {filmes.map(serie => (
+                                <Col key={serie.id} title={serie.title} className="mb-3" sm={2}>
+                                    <Link href={`/series/${serie.id}`}>
+                                        <img className="img-fluid" src={'https://image.tmdb.org/t/p/w500/' + serie.poster_path} />
+                                    </Link>
+                                </Col>
+                            ))}
+                        </Row>
+                    </Col>
+                </Row>
+            }
+
         </Pagina>
-    );
+    )
 }

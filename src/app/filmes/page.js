@@ -32,9 +32,11 @@ export default function Page() {
                                            <p>{item.original_title}</p>
                                            <p> Popularidade: {item.popularity}</p>
                                         </Card.Text>
-                                        <Link href={`/filmes/${item.id}`} passHref>
-                                        <Button variant="danger"> Ver Detalhes</Button>
+                                        
+                                        <Link className="btn btn-danger" href={`/filmes/${item.id}`} passHref>
+                                            Detalhes
                                         </Link>
+                                        
                             </Card.Body>
                         </Card>
                     </Col>
